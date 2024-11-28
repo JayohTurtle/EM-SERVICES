@@ -17,10 +17,10 @@ divAccordeon.setAttribute('id','accordion-task')//on ajoute l'id accordion-task 
 app.appendChild(divAccordeon)//on place la div dans app
 //on récupère la liste des tâches dans l'API
 const todos = fetch("http://localhost:3000/todos/")
-    .then (
+    .then (//on navigue dans le fichier todos
         todos => 
-            todos.json().then(tasks=>{
-                tasks[0].todolist.forEach( task => {
+            todos.json().then(tasks=>{//jusqu'à tasks
+                tasks[0].todolist.forEach( task => {//on boucle sur le tableau des tâches
                     let numTask = task.id
                     let tag = task.Tags
                     console.log(tag)
