@@ -13,6 +13,8 @@ const reponse = await fetch('http://localhost:3000/todos/'+ id,{
 })
 const task = await reponse.json()
 
+
+//on crée l'affichage de la tâche
 const h1 = document.querySelector('.masthead-heading')
 h1.innerHTML = task.text
 const portfolio = document.getElementById('app')
@@ -51,38 +53,88 @@ article.append(creation)
 article.append(Tags)
 article.append(complete)
 
-
 //Supprimer une tâche
 const btnTrash = document.createElement('button')
-btnTrash.innerText = "Supprimer"
+btnTrash.innerText = "Supprimer la tâche"
 btnTrash.classList.add('btn','btn-danger','btn-sm','fs-4','mt-3')
 portfolio.append(btnTrash)
 
 btnTrash.addEventListener('click', (event)=>{
     event.preventDefault()
+    const alert = confirm ("Etes-vous sûr de vouloir supprimer cette tâche?")
+    if (alert){
+        fetch('http://localhost:3000/todos/'+ id,{
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        })
+        const article = document.getElementById('article')
+        article.classList.add('d-none')
+        const btnTrash = document.querySelector('.btn-danger')
+        btnTrash.classList.add('d-none')
+        btnOpen.classList.add('d-none')
+        btnEnd.classList.add('d-none')
+        const h1 = document.querySelector('.masthead-heading')
+        h1.innerHTML = "Tâche supprimée"
+    }
+})
 
+//Tâche terminée
+const btnEnd = document.createElement('button')
+btnEnd.classList.add('btn','btn-success','btn-sm','fs-4','mt-3','ms-3')
+btnEnd.innerText = 'Terminer la tâche'
+portfolio.append(btnEnd)
+
+btnEnd.addEventListener('click', (event)=>{
+    event.preventDefault()
+    const complete = {
+        is_complete : true
+    }
+    const chargeUtile = JSON.stringify(complete)
     fetch('http://localhost:3000/todos/'+ id,{
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    })
-    const article = document.getElementById('article')
-    article.classList.add('d-none')
-    const btnTrash = document.querySelector('.btn-danger')
-    btnTrash.classList.add('d-none')
-    const h1 = document.querySelector('.masthead-heading')
-    h1.innerHTML = "Tâche supprimée"
-    const btnRetour = document.createElement('button')
-    const portfolio = document.getElementById('app')
+        method: "PUT",
+        headers: { "Content-Type": "application/json","Accept":"Application/json"},
+        body : chargeUtile
+        })
+        const oldComplete = document.querySelector('.text-danger')
+        const completeTask = document.createElement('h2')
+        completeTask.innerHTML = "Tâche terminée"
+        completeTask.classList.add('text-success','ms-2')
+        oldComplete.replaceWith(completeTask)
+})
+
+//réouvrir une tâche
+const btnOpen = document.createElement('button')
+btnOpen.classList.add('btn','btn-info','btn-sm','fs-4','mt-3','ms-3')
+btnOpen.innerText = "Réouvrir la tâche"
+portfolio.append(btnOpen)
+
+btnOpen.addEventListener('click', (event)=>{
+    event.preventDefault()
+    const complete = {
+        is_complete : false
+    }
+    const chargeUtile = JSON.stringify(complete)
+    fetch('http://localhost:3000/todos/'+ id,{
+        method: "PUT",
+        headers: { "Content-Type": "application/json","Accept":"Application/json"},
+        body : chargeUtile
+        })
+        const oldComplete = document.querySelector('.text-success')
+        const completeTask = document.createElement('h2')
+        completeTask.innerHTML = "A faire"
+        completeTask.classList.add('text-danger','ms-2')
+        oldComplete.replaceWith(completeTask)
+})
+
+//Revenir à la page des tâches
+const btnRetour = document.createElement('button')
     btnRetour.innerText = "Retour à la page des tâches"
-    btnRetour.classList.add('btn','btn-primary')
+    btnRetour.classList.add('btn','btn-primary', 'mb-5')
     portfolio.prepend(btnRetour)
     btnRetour.addEventListener('click', (event)=>{
         event.preventDefault()
         window.location.href = 'tasks.html'
-    })
 })
-
-//Tâche terminée
 
 function jourFrench(jour) {
     let jourFrench = ""
