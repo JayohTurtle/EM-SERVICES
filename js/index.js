@@ -1,8 +1,9 @@
 
-//**avant de récupérer le prénom de l'utilisateur, on prévient le rafraichissement de la page au clic sur le bouton submit */
+//avant de récupérer le prénom de l'utilisateur, on prévient le rafraichissement de la page au clic sur le bouton submit */
 const form = document.getElementById('form')
 
 // On utilise l'évènement submit
+
 form.addEventListener('submit', function (event) {
     try{
         // On empêche le comportement par défaut
@@ -18,7 +19,7 @@ form.addEventListener('submit', function (event) {
         //on passe sur la page des tâches
         window.location.href = "tasks.html"
     } catch (error){
-        afficherMessageErreur(error.message)//on appelle la focntion message erreur avec les attributs de notre erreur
+        afficherMessageErreur(error.message)//on appelle la fonction message erreur avec les attributs de notre erreur
     }
 })
 /**
@@ -26,7 +27,7 @@ form.addEventListener('submit', function (event) {
  * @param {string} message 
  */
 function afficherMessageErreur(message){
-    let popup = document.getElementById("form")//on place le message dans la formulaire
+    const popup = document.getElementById("form")//on place le message dans la formulaire
     let spanMessage = document.getElementById("erreur-message")//on vérifie que le span n'existe pas déjà pour ne pas en créer un nouveau
     if (!spanMessage){
         spanMessage = document.createElement("span")
