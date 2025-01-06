@@ -134,7 +134,7 @@ function addTask(event, inputName, inputTags) {
 }
 
 function messageErreur(message) {
-    const popup = document.getElementById('error');
+    const popup = document.getElementById('alert');
     let spanMessage = document.getElementById("erreur-message");
     if (!spanMessage) {
         spanMessage = document.createElement("span");
