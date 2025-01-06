@@ -31,20 +31,34 @@ const params = new URLSearchParams(url.search)
 // On récupère la valeur du paramètre id
 let id = params.get('id')
 
-const reponse = await fetch('http://localhost:3000/todos/'+ id,{
-    method: "GET",
-    headers: { 
-        "Accept":"application/json",
-        "Content-Type": "application/json",
+async function getTask(id) {
+    try {
+        const reponse = await fetch('http://localhost:3000/todos/' + id, {
+            method: "GET",
+            headers: { 
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            }
+        })
+
+        if (!reponse.ok) {
+            throw new Error(`Erreur HTTP! Statut: ${reponse.status} ${reponse.statusText}`)
+        }
+
+        const data = await reponse.json()
+        return data
+    } catch (error) {
+        messageErreurStatut('Erreur lors de la récupération de la tâche : ' + error.message)
+        return null;  // Assurez-vous de retourner une valeur par défaut ou null en cas d'erreur
     }
-})
-const task = await reponse.json()
+}
+
+const portfolio = document.getElementById('app')
+const task = await getTask(id)
 
 //on crée l'affichage de la tâche
 const h1 = document.querySelector('.masthead-heading')
 h1.innerHTML = task.text
-
-const portfolio = document.getElementById('app')
 
 const article = document.createElement('article')
 article.classList.add('border','border-primary','border-5')
@@ -69,7 +83,7 @@ const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0')
 const secondes = String(dateObj.getUTCSeconds()).padStart(2, '0')
 
 // Construire la chaîne formatée
-const dateFormatee = `${jourSemaine} ${jourMois} ${mois} à ${heures}:${minutes}:${secondes}`
+const dateFormatee = `${jourSemaine} ${jourMois} ${mois} ${annee} à ${heures}:${minutes}:${secondes}`
 
 creation.innerHTML = `Créée le  ${dateFormatee}`
 
@@ -78,11 +92,12 @@ Tags.classList.add('fs-2','text-center')
 Tags.innerHTML = "Tags:"
 
 const tableau = task.Tags
-for (let i = 0; i < tableau.length; i++) { 
+for (let i = 0 ; i < tableau.length ; i++) { 
     const tag = document.createElement('h3')
     tag.innerHTML = tableau[i]
     Tags.append(tag)
 }
+
 //fermer une tâche
 const btnEnd = document.createElement('button')
 btnEnd.classList.add('btn','btn-success','btn-sm','fs-4','mt-3')
@@ -121,9 +136,7 @@ portfolio.append(btnEnd)
 portfolio.append(btnOpen)
 portfolio.append(btnTrash)
 
-/**
- * on supprime la tâche au clic sur la bouton supprimer
- */
+//on supprime la tâche au clic sur la bouton supprimer
 btnTrash.addEventListener('click', ()=>{
     const alert = confirm ("Etes-vous sûr de vouloir supprimer cette tâche?")
     if (alert){
@@ -148,52 +161,91 @@ btnTrash.addEventListener('click', ()=>{
 /**
  * On ferme la tâche au clic sur le bouton fermer la tâche
  */
-btnEnd.addEventListener('click', (event)=>{
+btnEnd.addEventListener('click', (event) => {
     event.preventDefault()
     const complete = {
-        is_complete : true
+        is_complete: true
     }
     const chargeUtile = JSON.stringify(complete)
-    fetch('http://localhost:3000/todos/'+ id,{
+    
+    fetch('http://localhost:3000/todos/' + id, {
         method: "PUT",
-        headers: { "Content-Type": "application/json","Accept":"Application/json"},
-        body : chargeUtile
-        })
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: chargeUtile
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur lors de la mise à jour de la tâche : ' + response.statusText)
+        }
+        return response.json()
+    })
+    .then(() => {
         const oldComplete = document.querySelector('.text-danger')
-
+        
         const completeTask = document.createElement('h2')
         completeTask.innerHTML = "Tâche terminée"
-        completeTask.classList.add('text-success','ms-2')
+        completeTask.classList.add('text-success', 'ms-2')
         oldComplete.replaceWith(completeTask)
-
+        
         btnOpen.classList.remove('d-none')
         btnEnd.classList.add('d-none')
+    })
+    .catch(error => {
+        messageErreurStatut('Erreur lors de la mise à jour de la tâche : ' + error.message)
+    })
 })
+
 
 /**
  * On ouvre la tâche au clic sur le bouton réouvrir la tâche
  */
-btnOpen.addEventListener('click', (event)=>{
+btnOpen.addEventListener('click', (event) => {
     event.preventDefault()
     const complete = {
-        is_complete : false
+        is_complete: false
     }
     const chargeUtile = JSON.stringify(complete)
-    fetch('http://localhost:3000/todos/'+ id,{
+    
+    fetch('http://localhost:3000/todos/' + id, {
         method: "PUT",
-        headers: { "Content-Type": "application/json","Accept":"Application/json"},
-        body : chargeUtile
-        })
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: chargeUtile
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur lors de la mise à jour de la tâche : ' + response.statusText)
+        }
+        return response.json()
+    })
+    .then(() => {
         const oldComplete = document.querySelector('.text-success')
-
+        
         const completeTask = document.createElement('h2')
-        completeTask.innerHTML = "A faire"
-        completeTask.classList.add('text-danger','ms-2')
+        completeTask.innerHTML = "À faire"
+        completeTask.classList.add('text-danger', 'ms-2')
         oldComplete.replaceWith(completeTask)
-
+        
         btnOpen.classList.add('d-none')
         btnEnd.classList.remove('d-none')
+    })
+    .catch(error => {
+        messageErreurStatut('Erreur lors de la mise à jour de la tâche : ' + error.message)
+    })
 })
 
+/**
+ * Fonction qui place le message d'erreur
+ * @param {string} message 
+ */
+function messageErreurStatut(message) {
+    let spanMessage = document.getElementById("erreur-message")
+    if (!spanMessage) {
+        spanMessage = document.createElement("span")
+        spanMessage.id = "erreur-message"
+        spanMessage.classList.add('text-danger', 'fs-4', 'ml-5')
+        portfolio.prepend(spanMessage)
+    }
+    spanMessage.innerHTML = message
+}
 
 
