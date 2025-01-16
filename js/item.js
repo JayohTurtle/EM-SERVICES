@@ -33,7 +33,7 @@ let id = params.get('id')
 
 async function getTask(id) {
     try {
-        const reponse = await fetch('http://localhost:3000/todos/' + id, {
+        const reponse = await fetch('https://learnincampus-api-todo.vercel.app/todos/' + id, {
             method: "GET",
             headers: { 
                 "Accept": "application/json",
@@ -140,7 +140,7 @@ portfolio.append(btnTrash)
 btnTrash.addEventListener('click', ()=>{
     const alert = confirm ("Etes-vous sûr de vouloir supprimer cette tâche?")
     if (alert){
-        fetch('http://localhost:3000/todos/'+ id,{
+        fetch('https://learnincampus-api-todo.vercel.app/todos'+ id,{
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         })
@@ -168,7 +168,7 @@ btnEnd.addEventListener('click', (event) => {
     }
     const chargeUtile = JSON.stringify(complete)
     
-    fetch('http://localhost:3000/todos/' + id, {
+    fetch('https://learnincampus-api-todo.vercel.app/todos' + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: chargeUtile
@@ -206,7 +206,7 @@ btnOpen.addEventListener('click', (event) => {
     }
     const chargeUtile = JSON.stringify(complete)
     
-    fetch('http://localhost:3000/todos/' + id, {
+    fetch('https://learnincampus-api-todo.vercel.app/todos' + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: chargeUtile

@@ -1,3 +1,17 @@
+//Ajout du prénom de l'utilisateur
+
+if (localStorage.length === 0) {
+    window.location.href = 'index.html';
+} else {
+    const nom = localStorage.getItem('prenom');
+    const app = document.getElementById('app'); //on récupérere l'endroit du fichier html où on va insérer le prénom
+    const divPrenom = document.createElement('div');
+    divPrenom.classList.add('fs-2');
+    divPrenom.innerHTML = `Bonjour ${nom}`;
+
+    app.prepend(divPrenom);
+}
+
 //Création du lien pour accés à la page statistiques
 
 const navbar = document.getElementById('mainNav')
@@ -21,7 +35,7 @@ aDiv.append(statLink)
  */
 const initializeTodos = async () => {
     try {
-        const response = await fetch("http://localhost:3000/todos/", {
+        const response = await fetch("https://learnincampus-api-todo.vercel.app/todos", {
             method: 'GET',
             headers: {
                 "Accept": "application/json"
@@ -54,12 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 //Ajout du bouton qui permet d'ajouter une tâche
-let app = document.getElementById('app')//on récupérere l'endroit du fichier html où on va insérer le bouton
 
-let divBtn = document.createElement('div')//on crée une div
+const divBtn = document.createElement('div')//on crée une div
 divBtn.classList.add('container','accordion-body')//on aoute les classes utiles à la div
 
-let btnAjout = document.createElement('button')//on crée l'élément bouton
+const btnAjout = document.createElement('button')//on crée l'élément bouton
 btnAjout.textContent = ("Ajouter une tâche")//on écrit le contenu text du bouton
 btnAjout.classList.add('btn','btn-secondary')//on ajoute des classes au bouton pour son style et sa position dans la page
 
@@ -186,7 +199,7 @@ function addTask(event, inputName, inputTags) {
             Tags: inputTags.value.split(',')
         }
         const chargeUtile = JSON.stringify(task)
-        fetch("http://localhost:3000/todos", { 
+        fetch("https://learnincampus-api-todo.vercel.app/todos", { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: chargeUtile
