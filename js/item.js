@@ -140,7 +140,7 @@ portfolio.append(btnTrash)
 btnTrash.addEventListener('click', ()=>{
     const alert = confirm ("Etes-vous sûr de vouloir supprimer cette tâche?")
     if (alert){
-        fetch('https://back-end-em-services.vercel.app/todos'+ id,{
+        fetch('https://back-end-em-services.vercel.app/todos/'+ id,{
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         })
@@ -168,7 +168,7 @@ btnEnd.addEventListener('click', (event) => {
     }
     const chargeUtile = JSON.stringify(complete)
     
-    fetch('https://back-end-em-services.vercel.app/todos' + id, {
+    fetch('https://back-end-em-services.vercel.app/todos/' + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: chargeUtile
@@ -206,7 +206,7 @@ btnOpen.addEventListener('click', (event) => {
     }
     const chargeUtile = JSON.stringify(complete)
     
-    fetch('https://back-end-em-services.vercel.app/todos' + id, {
+    fetch('https://back-end-em-services.vercel.app/todos/' + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: chargeUtile
