@@ -4,7 +4,7 @@
  */
 const fetchTodos = async () => {
     try {
-        const response = await fetch("https://learnincampus-api-todo.vercel.app/todos", {
+        const response = await fetch("https://back-end-em-services.vercel.app/todos", {
             method: 'GET',
             headers: {
                 "Accept": "application/json"

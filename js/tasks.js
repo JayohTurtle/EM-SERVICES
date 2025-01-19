@@ -35,7 +35,7 @@ aDiv.append(statLink)
  */
 const initializeTodos = async () => {
     try {
-        const response = await fetch("https://learnincampus-api-todo.vercel.app/todos", {
+        const response = await fetch("https://back-end-em-services.vercel.app/todos", {
             method: 'GET',
             headers: {
                 "Accept": "application/json"
@@ -199,7 +199,7 @@ function addTask(event, inputName, inputTags) {
             Tags: inputTags.value.split(',')
         }
         const chargeUtile = JSON.stringify(task)
-        fetch("https://learnincampus-api-todo.vercel.app/todos", { 
+        fetch("https://back-end-em-services.vercel.app/todos", { 
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: chargeUtile
